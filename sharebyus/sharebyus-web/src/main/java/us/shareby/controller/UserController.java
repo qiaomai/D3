@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import us.shareby.dao.dataaccess.UserDao;
-import us.shareby.dao.interceptor.MySQLDialect;
+import us.shareby.core.dao.UserDao;
+import us.shareby.core.dao.interceptor.MySQLDialect;
 
 /**
  * Created with IntelliJ IDEA.

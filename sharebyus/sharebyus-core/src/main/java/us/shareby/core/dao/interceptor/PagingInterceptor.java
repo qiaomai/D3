@@ -3,7 +3,7 @@
  *
  * Created on Dec 25, 2012 3:50:06 PM 
  */
-package us.shareby.dao.interceptor;
+package us.shareby.core.dao.interceptor;
 
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;

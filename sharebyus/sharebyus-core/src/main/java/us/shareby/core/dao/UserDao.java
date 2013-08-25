@@ -1,6 +1,6 @@
-package us.shareby.dao.dataaccess;
+package us.shareby.core.dao;
 
-import us.shareby.dao.annotation.DataAccessRepository;
+import us.shareby.core.dao.annotation.DataAccessRepository;
 
 /**
  * Created with IntelliJ IDEA.

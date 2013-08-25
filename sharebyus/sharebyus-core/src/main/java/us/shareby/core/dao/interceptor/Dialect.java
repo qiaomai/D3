@@ -1,4 +1,4 @@
-package us.shareby.dao.interceptor;
+package us.shareby.core.dao.interceptor;
 
 /**
  * @author chengdong
