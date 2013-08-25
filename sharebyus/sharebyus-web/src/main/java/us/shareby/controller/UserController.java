@@ -27,6 +27,7 @@ public class UserController {
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     @ResponseBody
     public String register() {
+        System.out.println("autowired object is "+userDao);
         return "success";
     }
 
