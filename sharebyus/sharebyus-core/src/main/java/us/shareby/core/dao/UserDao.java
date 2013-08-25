@@ -1,14 +1,17 @@
 package us.shareby.core.dao;
 
+import org.springframework.stereotype.Service;
 import us.shareby.core.dao.annotation.DataAccessRepository;
+import us.shareby.core.entity.User;
 
 /**
- * Created with IntelliJ IDEA.
  * User: chengdong
  * Date: 13-8-25
  * Time: 上午11:23
- * To change this template use File | Settings | File Templates.
  */
 @DataAccessRepository
 public interface UserDao {
+
+    void register(User user);
+
 }

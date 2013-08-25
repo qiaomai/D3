@@ -11,3 +11,9 @@ sharebyus/sharebyus-web/sharebyus-web.iml
 
 sharebyus/sharebyus-core/target/*
 sharebyus/sharebyus-web/target/*
+
+sharebyus/.DS_Store
+
+.DS_Store
+
+*.textClipping
