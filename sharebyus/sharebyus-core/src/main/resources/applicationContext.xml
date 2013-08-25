@@ -106,4 +106,19 @@
                           proxy-target-class="true"/>
 
 
+
+    <bean id="velocity" class="us.shareby.core.service.ShareVelocity">
+        <constructor-arg index="0">
+            <map>
+                <entry key="resource.loader" value="class"/>
+                <entry key="class.resource.loader.description" value="Velocity Class Path Loader"/>
+                <entry key="class.resource.loader.class"
+                       value="org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"/>
+                <entry key="class.resource.loader.path" value="${class.resource.loader.path}"/>
+                <entry key="class.resource.loader.cache" value="true"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
 </beans>

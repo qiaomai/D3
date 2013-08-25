@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author chengdong
  */
-@Service("velocity")
+//@Service("velocity")
 public class ShareVelocity {
 
 
