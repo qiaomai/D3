@@ -60,6 +60,9 @@ public class TransportService {
     @Value("${mail.notification.sender}")
     private String defaultSender;
 
+    @Value("${mail.notification.pwd}")
+    private String mailPassword;
+
     /**
      * velocity
      */

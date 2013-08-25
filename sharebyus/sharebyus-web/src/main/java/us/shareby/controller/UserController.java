@@ -31,19 +31,11 @@ public class UserController {
     @Autowired
     private MD5 md5;
 
-    @Autowired
-    private TransportService transportService;
 
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     @ResponseBody
     public String register() {
-        Map<String, Object> publicShareMap = Maps.newHashMap();
-
-        transportService.sendMailNotification(null, 0, "157084314@qq.com",
-                "111", "157084314@qq.com", "test",
-                NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE,
-                publicShareMap, NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE_PLAIN, publicShareMap);
         return "success";
     }
 
