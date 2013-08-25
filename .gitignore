@@ -1,0 +1,13 @@
+
+sharebyus/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml
+
+sharebyus/.idea/*
+
+sharebyus/sharebyus.iml
+
+sharebyus/sharebyus-web/sharebyus-web.iml
+
+*.iml
+
+sharebyus/sharebyus-core/target/*
+sharebyus/sharebyus-web/target/*

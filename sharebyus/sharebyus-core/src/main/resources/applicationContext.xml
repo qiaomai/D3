@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+
+	<description>Spring common configuration</description>
+
+	<!-- User annotation to auto reject beans -->
+	<context:component-scan base-package="us.shareby">
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+
+	<context:property-placeholder
+		location="classpath:shareby.properties,classpath:shareby_${project.env:dev}.properties" />
+
+	<bean id="configuration"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+		lazy-init="false">
+		<property name="basenames"
+			value="classpath:shareby,classpath:shareby_${project.env:dev}" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="30" />
+	</bean>
+
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="maxActive" value="${dbcp.maxActive}" />
+		<property name="maxIdle" value="${dbcp.maxIdle}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+    <bean id="paginationInterceptor"
+          class="us.shareby.dao.interceptor.PagingInterceptor" />
+
+	<!-- Mybatis auto scanner -->
+	<bean id="simpleMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="us.shareby.dao.dataaccess" />
+		<property name="annotationClass"
+			value="us.shareby.dao.annotation.DataAccessRepository" />
+	</bean>
+
+	<!-- Mybatis configuration -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="cn.com.conversant.mediacorpugc.entity" />
+		<property name="mapperLocations" value="classpath:/mapper/UserMapper.xml" />
+		<property name="plugins">
+			<array>
+				<ref bean="paginationInterceptor" />
+			</array>
+		</property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="dialect">mysql</prop>
+			</props>
+		</property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+
+
+</beans>

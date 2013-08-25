@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mapper.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="us.shareby.dao.dataaccess.UserDao">
+    <select id="getUserCount" parameterType="String" resultType="long">
+         SELECT count(1)
+         FROM UGC_USER
+         WHERE status != 9
+    </select>
+
+</mapper>

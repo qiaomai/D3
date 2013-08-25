@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+
+	<!-- Only scan @Controller -->
+    <!-- Enable Shiro Annotations for Spring-configured beans. Only run after -->
+    <!-- the lifecycleBeanProcessor has run: -->
+
+
+	<context:component-scan base-package="us.shareby.controller">
+	</context:component-scan>
+
+	<mvc:annotation-driven >
+		<mvc:message-converters>
+            <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <util:list>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="text"/>
+                            <constructor-arg index="1" value="plain"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="*"/>
+                            <constructor-arg index="1" value="*"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="text"/>
+                            <constructor-arg index="1" value="*"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="application"/>
+                            <constructor-arg index="1" value="json"/>
+                            <constructor-arg index="2" value="UTF-8"/>
+                        </bean>
+                    </util:list>
+                </property>
+            </bean>
+             <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>  
+           <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/> 
+        </mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- handle the path that could not be mapped to controller -->
+	<mvc:default-servlet-handler />
+
+	<!-- Define the location of .jsp file -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<mvc:view-controller path="/" view-name="index" />
+
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/ directory -->
+    <mvc:resources mapping="/resources/**" location="/WEB-INF/resources/" />
+
+</beans>
