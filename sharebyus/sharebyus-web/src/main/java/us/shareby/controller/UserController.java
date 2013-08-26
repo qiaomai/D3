@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import us.shareby.core.constants.NotificationConstants;
 import us.shareby.core.dao.UserDao;
 import us.shareby.core.dao.interceptor.MySQLDialect;
@@ -38,25 +39,22 @@ public class UserController {
         return "success";
     }
 
-
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
-    @ResponseBody
-    public String testPost() {
-        User user = new User();
-        user.setName("chengdong");
-        user.setPassword("chengdong");
-        user.setEmail("157084314@qq.com");
-
-        userService.register(user);
-        return "post";
-    }
-
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void register(@RequestBody User user) {
+    public ModelAndView register(@ModelAttribute User user) {
 
         if (!user.validate()) {
             throw new BaseRuntimeException(ErrorCode.WARN_REQUIRED_PARAMS_NULL);
         }
         userService.register(user);
+
+
+        return new ModelAndView("mail/sent");
+    }
+
+    @RequestMapping(value="activate/{activateCode}",method = RequestMethod.GET)
+    public ModelAndView activate(@PathVariable String activateCode){
+        System.out.println(activateCode);
+        userService.activate(activateCode);
+        return new ModelAndView("/login");
     }
 }

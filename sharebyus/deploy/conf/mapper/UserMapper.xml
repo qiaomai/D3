@@ -12,7 +12,6 @@
         <result column="sex" property="sex"/>
         <result column="status" property="status"/>
         <result column="photo" property="photo"/>
-        <result column="address" property="address"/>
         <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -32,6 +31,33 @@
                 #{email}
                 )
 
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+
     </insert>
+
+    <select id="queryUser"   parameterType="Map" resultType="User">
+		select name,password,email,sex,status,photo,description,create_time,update_time
+		from  SHARE_USER
+		where 1 > 1
+        <if test="email !=null"> or email=#{email}</if>
+        <if test="name !=null"> or name=#{name}</if>
+
+	</select>
+
+    <update id="activate" parameterType="Long">
+        update SHARE_USER SET
+        status = 'activated'
+        where id = #{id} and status ='noactivate'
+    </update>
+
+    <update id="resetPassword" parameterType="Map">
+		UPDATE SNC_USER SET
+		password=#{password},modified_time=SYSDATE()
+		WHERE id = #{userId}
+	</update>
+
+
 
 </mapper>

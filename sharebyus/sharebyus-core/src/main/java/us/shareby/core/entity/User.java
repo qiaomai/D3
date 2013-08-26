@@ -16,7 +16,7 @@ public class User {
     private String email;
     //‘male’,’female'
     private String sex;
-    //'active','inactive','disable'
+    //'noactivate','activated','disable'
     private String status;
     private String photo;
     private String address;

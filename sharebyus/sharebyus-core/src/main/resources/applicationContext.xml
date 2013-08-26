@@ -68,7 +68,7 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="typeAliasesPackage" value="us.shareby.core.entity"/>
-        <property name="mapperLocations" value="classpath:/mapper/UserMapper.xml"/>
+        <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
         <property name="plugins">
             <array>
                 <ref bean="paginationInterceptor"/>

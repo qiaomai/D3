@@ -1,14 +1,20 @@
 package us.shareby.core.service.impl;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import us.shareby.core.constants.NotificationConstants;
 import us.shareby.core.dao.ActivateDao;
 import us.shareby.core.dao.UserDao;
 import us.shareby.core.entity.Activate;
 import us.shareby.core.entity.User;
+import us.shareby.core.exception.BaseRuntimeException;
+import us.shareby.core.exception.ErrorCode;
 import us.shareby.core.notification.TransportService;
 import us.shareby.core.service.UserService;
 
@@ -24,6 +30,8 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService{
 
+    private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserDao userDao;
 
@@ -36,6 +44,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(User user) {
+        User exist =   queryUserByNameOrMail(user.getName(),user.getEmail());
+        if(exist!=null){
+            throw new BaseRuntimeException(ErrorCode.WARN_NAME_OR_EMAIL_USED);
+        }
 
         //TODO 验证用户邮箱，是否是已开通的公司，防止用户通过接口直接提交数据.
         userDao.register(user);
@@ -53,14 +65,49 @@ public class UserServiceImpl implements UserService{
 
 
         transportService.sendMailNotification(null, 0, "157084314@qq.com",
-                "111", user.getEmail(), "ShareBy激活邮件",
+                "woshiniye!82", user.getEmail(), "ShareBy激活邮件",
                 NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE,
                 paramsMap, NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE_PLAIN, paramsMap);
 
 
     }
 
+    @Override
+    public User queryUserByName(String name) {
+        Map<String,String> parameters = Maps.newHashMap();
+        parameters.put("name",name);
+        return userDao.queryUser(parameters);
+    }
 
+    @Override
+    public User queryUserByEmail(String email) {
+        Map<String,String> parameters = Maps.newHashMap();
+        parameters.put("email",email);
+        return userDao.queryUser(parameters);
+    }
+
+    @Override
+    public User queryUserByNameOrMail(String name, String email) {
+        Map<String,String> parameters = Maps.newHashMap();
+        parameters.put("name",name);
+        parameters.put("email",email);
+        return userDao.queryUser(parameters);
+    }
+
+    @Override
+    public void activate(String activateCode) {
+        if(Strings.isNullOrEmpty(activateCode)){
+            throw new BaseRuntimeException(ErrorCode.WARN_INVALIDATE_ACTIVATE_CODE);
+        }
+        Activate activate = activateDao.getActivate(activateCode);
+        if(activate == null){
+            throw new BaseRuntimeException(ErrorCode.WARN_INVALIDATE_ACTIVATE_CODE);
+        }
+        int activateCount = userDao.activate(activate.getUserId());
+        if(activateCount == 0){
+            logger.error("user used activate code :"+activateCode +" activate user :"+activate.getUserId() +"failed!");
+        }
+    }
 
 
 }

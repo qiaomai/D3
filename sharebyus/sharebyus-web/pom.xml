@@ -96,6 +96,7 @@
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <encoding>UTF-8</encoding>
+                    <compilerArgument>-J-Duser.country=US</compilerArgument>
                 </configuration>
             </plugin>
 

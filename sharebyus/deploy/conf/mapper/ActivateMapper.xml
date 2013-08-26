@@ -12,17 +12,23 @@
     </resultMap>
 
 
-    <insert id="addActivate" parameterType="Activate">
+    <insert id="addActivate" parameterType="Activate" useGeneratedKeys="true" keyProperty="id">
 
-                INSERT INTO SHARE_ACTIVATE (
-                activate_code,
-                user_id)
-                VALUES
-                (
-                #{activateCode},
-                #{userId}
-                )
+
+      INSERT INTO SHARE_ACTIVATE (
+            activate_code,
+            user_id)
+      VALUES
+            (
+            #{activateCode},
+            #{userId}
+            )
 
     </insert>
+
+    <select id="getActivate"   parameterType="String" resultType="Activate">
+		select activate_code as activateCode,user_id as userId,create_time as createTime from  SHARE_ACTIVATE where activate_code = #{activateCode}
+	</select>
+
 
 </mapper>
