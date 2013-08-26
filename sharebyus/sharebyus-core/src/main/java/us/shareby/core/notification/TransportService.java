@@ -72,14 +72,11 @@ public class TransportService {
     /**
      * @param server
      * @param port
-     * @param sender
-     * @param password
      * @param to
      * @param subject
      * @param
      */
-    public void sendMailNotification(String server, int port, String sender,
-                                     String password, String to, String subject, String htmlTemplate,
+    public void sendMailNotification(String server, int port, String to, String subject, String htmlTemplate,
                                      Map<String, Object> htmlValuesMap, String textTemplate,
                                      Map<String, Object> textValuesMap) {
 
@@ -92,7 +89,6 @@ public class TransportService {
                     htmlTemplate);
 
 
-
             if (!Strings.isNullOrEmpty(textTemplate)) {
                 textInput = velocity.getInputStreamFromTemplate(textValuesMap,
                         textTemplate);
@@ -100,24 +96,24 @@ public class TransportService {
             }
 
 
-            if (!StringUtils.isBlank(password)) {
+            if (!StringUtils.isBlank(mailPassword)) {
 
                 if (htmlInput != null && textInput != null) {
-                    sendAlternativeMailWithAuth(server, port, sender, password,
+                    sendAlternativeMailWithAuth(server, port,
                             to, subject, htmlInput, textInput,
                             this.DEFAULT_CHARSET);
                 } else {
-                    this.sendHtmlMailWithAuth(server, port, sender, password,
+                    this.sendHtmlMailWithAuth(server, port, defaultSender, mailPassword,
                             to, subject, htmlInput, this.DEFAULT_CHARSET,
                             this.DEFAULT_CONTENT_TYPE);
                 }
 
             } else {
                 if (htmlInput != null && textInput != null) {
-                    sendAlternativeMail(server, port, sender, to, subject,
+                    sendAlternativeMail(server, port, defaultSender, to, subject,
                             htmlInput, textInput, this.DEFAULT_CHARSET);
                 } else {
-                    this.sendHtmlMail(server, port, sender, to, subject,
+                    this.sendHtmlMail(server, port, defaultSender, to, subject,
                             htmlInput, this.DEFAULT_CHARSET,
                             this.DEFAULT_CONTENT_TYPE);
                 }
@@ -138,16 +134,13 @@ public class TransportService {
      *
      * @param server
      * @param port
-     * @param sender
-     * @param password
      * @param to
      * @param subject
      * @param
      * @param charset
      * @param
      */
-    public void sendAlternativeMailWithAuth(String server, int port,
-                                            String sender, String password, String to, String subject,
+    public void sendAlternativeMailWithAuth(String server, int port, String to, String subject,
                                             InputStream htmlInputStream, InputStream textInputStream,
                                             String charset) {
 
@@ -159,11 +152,8 @@ public class TransportService {
             port = defaultPort;
         }
 
-        if (Strings.isNullOrEmpty(sender)) {
-            sender = this.defaultSender;
-        }
 
-        if (!validatePwdParameter(password)) {
+        if (!validatePwdParameter(mailPassword)) {
             return;
         }
 
@@ -182,16 +172,16 @@ public class TransportService {
 
         try {
 
-            logger.debug("sender=" + sender + "|password=" + password + "|to=" + to + "|subject=" + subject + "|");
+            logger.debug("sender=" + defaultSender + "|password=" + mailPassword + "|to=" + to + "|subject=" + subject + "|");
 
             HtmlEmail email = new HtmlEmail();
             email.setSmtpPort(port);
             email.setHostName(server);
             email.setCharset(charset);
             email.setSubject(MimeUtility.encodeText(subject));
-            email.setFrom(sender);
+            email.setFrom(defaultSender);
             email.addTo(to);
-            email.setAuthentication(sender, password);
+            email.setAuthentication(defaultSender, mailPassword);
 
             MimeMultipart content = new MimeMultipart("alternative");
 
@@ -222,7 +212,7 @@ public class TransportService {
 
         } catch (Exception e) {
             logger.error("send alternative mail exception", e);
-            logger.debug("sender=" + sender + "|password=" + "" + "|to=" + to + "|subject=" + subject + "|" + "result:" + e.getMessage());
+            logger.debug("sender=" + defaultSender + "|password=" + "" + "|to=" + to + "|subject=" + subject + "|" + "result:" + e.getMessage());
         }
     }
 
@@ -330,23 +320,20 @@ public class TransportService {
         List<String> recipientList = new ArrayList<String>();
         recipientList.add(to);
 
-        sendHtmlMailWithAuth(server, port, sender, password, recipientList,
+        sendHtmlMailWithAuth(server, port, recipientList,
                 null, null, subject, inputStream, charset, contentType);
 
     }
 
     /**
      * @param server
-     * @param sender
-     * @param password
      * @param recipientList
      * @param ccRecipientList
      * @param bccRecipientList
      * @param subject
      * @param inputStream
      */
-    public void sendHtmlMailWithAuth(String server, int port, String sender,
-                                     String password, List<String> recipientList,
+    public void sendHtmlMailWithAuth(String server, int port, List<String> recipientList,
                                      List<String> ccRecipientList, List<String> bccRecipientList,
                                      String subject, InputStream inputStream, String charset,
                                      String contentType) {
@@ -359,12 +346,9 @@ public class TransportService {
             port = defaultPort;
         }
 
-        if (Strings.isNullOrEmpty(sender)) {
-            sender = this.defaultSender;
-        }
 
-        if (!validateParamWithoutPwd(server, sender, recipientList)
-                || !validatePwdParameter(password)) {
+        if (!validateParamWithoutPwd(server, defaultSender, recipientList)
+                || !validatePwdParameter(mailPassword)) {
             return;
         }
 
@@ -402,20 +386,20 @@ public class TransportService {
             }
             // send auth plain
             boolean result = client.auth(
-                    AuthenticatingSMTPClient.AUTH_METHOD.PLAIN, sender,
-                    password);
+                    AuthenticatingSMTPClient.AUTH_METHOD.PLAIN, defaultSender,
+                    mailPassword);
             if (!result) {
-                logger.error("auth fail: for sender=" + sender + ":password="
-                        + password);
+                logger.error("auth fail: for sender=" + defaultSender + ":password="
+                        + mailPassword);
                 return;
             }
 
             for (String to : recipientList) {
-                logger.debug("sender=" + sender + "|password=" + password + "|to=" + to + "|subject=" + subject + "|");
+                logger.debug("sender=" + defaultSender + "|password=" + mailPassword + "|to=" + to + "|subject=" + subject + "|");
             }
 
 
-            handleSendingMail(client, sender, recipientList, ccRecipientList,
+            handleSendingMail(client, defaultSender, recipientList, ccRecipientList,
                     bccRecipientList, subject, inputStream, charset,
                     contentType);
 

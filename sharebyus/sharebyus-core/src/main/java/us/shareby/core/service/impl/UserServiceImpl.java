@@ -64,8 +64,7 @@ public class UserServiceImpl implements UserService{
         paramsMap.put("receiverName",user.getName());
 
 
-        transportService.sendMailNotification(null, 0, "157084314@qq.com",
-                "woshiniye!82", user.getEmail(), "ShareBy激活邮件",
+        transportService.sendMailNotification(null, 0, user.getEmail(), "ShareBy激活邮件",
                 NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE,
                 paramsMap, NotificationConstants.REGISTER_ACTIVE_NOTIFY_TEMPLATE_PLAIN, paramsMap);
 
