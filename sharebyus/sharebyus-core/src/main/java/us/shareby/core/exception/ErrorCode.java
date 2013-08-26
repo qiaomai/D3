@@ -7,6 +7,8 @@ package us.shareby.core.exception;
 public enum ErrorCode {
 
     WARN_USERNAME_OR_PASSWORD_WRONG(101001, "username or password wrong!"),
+    WARN_REQUIRED_PARAMS_NULL(101400,"必填参数不能为空"),
+
     ERROR_SERVER_INNER_ERROR(101005, "server inner error.");
 
     private int statusCode;

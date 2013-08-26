@@ -12,17 +12,15 @@
     </resultMap>
 
 
-    <insert id="register" parameterType="User">
+    <insert id="addActivate" parameterType="Activate">
 
                 INSERT INTO SHARE_ACTIVATE (
                 activate_code,
-                user_id,
-                create_time)
+                user_id)
                 VALUES
                 (
                 #{activateCode},
-                #{userId},
-                #{createTime}
+                #{userId}
                 )
 
     </insert>

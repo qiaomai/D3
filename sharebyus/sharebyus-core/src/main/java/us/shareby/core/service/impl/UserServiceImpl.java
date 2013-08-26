@@ -38,16 +38,12 @@ public class UserServiceImpl implements UserService{
     public void register(User user) {
 
         //TODO 验证用户邮箱，是否是已开通的公司，防止用户通过接口直接提交数据.
-        Date now = new Date();
-        user.setCreateTime(now);
         userDao.register(user);
-
 
         Activate activate = new Activate();
         String activateCode = UUID.randomUUID().toString();
         activate.setActivateCode(activateCode);
         activate.setUserId(user.getId());
-        activate.setCreateTime(now);
         activateDao.addActivate(activate);
 
 

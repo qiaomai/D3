@@ -24,14 +24,12 @@
                 INSERT INTO SHARE_USER (
                 name,
                 password,
-                email,
-                create_time)
+                email)
                 VALUES
                 (
                 #{name},
                 #{password},
-                #{email},
-                #{createTime}
+                #{email}
                 )
 
     </insert>

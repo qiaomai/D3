@@ -1,5 +1,7 @@
 package us.shareby.core.entity;
 
+import com.google.common.base.Strings;
+
 import java.util.Date;
 
 /**
@@ -21,6 +23,13 @@ public class User {
     private String description;
     private Date createTime;
     private Date updateTime;
+
+    public boolean validate(){
+        if(Strings.isNullOrEmpty(name)||Strings.isNullOrEmpty(password)||Strings.isNullOrEmpty(email)){
+            return false;
+        }
+        return true;
+    }
 
     public long getId() {
         return id;
