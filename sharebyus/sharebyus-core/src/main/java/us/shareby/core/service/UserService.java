@@ -16,11 +16,9 @@ public interface UserService {
 
     void register(User user);
 
-    User queryUserByName(String name);
 
-    User queryUserByEmail(String email);
+    User queryUser(String email);
 
-    User queryUserByNameOrMail(String name,String email);
 
     void activate(String activateCode);
 }

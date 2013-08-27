@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(User user) {
-        User exist =   queryUserByNameOrMail(user.getName(),user.getEmail());
+        User exist =   queryUser(user.getEmail());
         if(exist!=null){
             throw new BaseRuntimeException(ErrorCode.WARN_NAME_OR_EMAIL_USED);
         }
@@ -72,25 +72,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User queryUserByName(String name) {
-        Map<String,String> parameters = Maps.newHashMap();
-        parameters.put("name",name);
-        return userDao.queryUser(parameters);
-    }
-
-    @Override
-    public User queryUserByEmail(String email) {
-        Map<String,String> parameters = Maps.newHashMap();
-        parameters.put("email",email);
-        return userDao.queryUser(parameters);
-    }
-
-    @Override
-    public User queryUserByNameOrMail(String name, String email) {
-        Map<String,String> parameters = Maps.newHashMap();
-        parameters.put("name",name);
-        parameters.put("email",email);
-        return userDao.queryUser(parameters);
+    public User queryUser(String email) {
+        return userDao.queryUser(email);
     }
 
     @Override

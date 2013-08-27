@@ -16,7 +16,7 @@ public interface UserDao {
 
     void register(User user);
 
-    User queryUser(Map<String,String> parameters);
+    User queryUser(String email);
 
     int activate(long userId);
 }

@@ -37,13 +37,10 @@
 
     </insert>
 
-    <select id="queryUser"   parameterType="Map" resultType="User">
+    <select id="queryUser"   parameterType="String" resultType="User">
 		select name,password,email,sex,status,photo,description,create_time,update_time
 		from  SHARE_USER
-		where 1 > 1
-        <if test="email !=null"> or email=#{email}</if>
-        <if test="name !=null"> or name=#{name}</if>
-
+		where  email=#{email}
 	</select>
 
     <update id="activate" parameterType="Long">
