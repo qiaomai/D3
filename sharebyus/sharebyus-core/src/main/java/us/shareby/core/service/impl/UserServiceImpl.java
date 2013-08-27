@@ -5,9 +5,7 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import us.shareby.core.constants.NotificationConstants;
 import us.shareby.core.dao.ActivateDao;
 import us.shareby.core.dao.UserDao;
@@ -16,10 +14,9 @@ import us.shareby.core.entity.User;
 import us.shareby.core.exception.BaseRuntimeException;
 import us.shareby.core.exception.ErrorCode;
 import us.shareby.core.notification.TransportService;
+import us.shareby.core.service.CompanyService;
 import us.shareby.core.service.UserService;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,6 +35,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private ActivateDao activateDao;
 
+    @Autowired
+    private CompanyService companyService;
+
 
     @Autowired
     private TransportService transportService;
@@ -46,10 +46,13 @@ public class UserServiceImpl implements UserService{
     public void register(User user) {
         User exist =   queryUser(user.getEmail());
         if(exist!=null){
-            throw new BaseRuntimeException(ErrorCode.WARN_NAME_OR_EMAIL_USED);
+            throw new BaseRuntimeException(ErrorCode.WARN_EMAIL_USED);
         }
 
-        //TODO 验证用户邮箱，是否是已开通的公司，防止用户通过接口直接提交数据.
+        if(!companyService.canRegister(user.getEmail())){
+            throw new BaseRuntimeException(ErrorCode.WARN_COMPANY_NOT_OPEN);
+        }
+
         userDao.register(user);
 
         Activate activate = new Activate();

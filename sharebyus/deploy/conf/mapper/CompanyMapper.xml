@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mapper.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="us.shareby.core.dao.CompanyDao">
+
+
+    <resultMap id="companyResultMap" type="Company">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email_suffix" property="emailSuffix"/>
+        <result column="logo" property="logo"/>
+        <result column="address" property="address"/>
+        <result column="office_building" property="officeBuilding"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="city_id" property="cityId"/>
+        <result column="area_id" property="areaId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <insert id="openRegister" parameterType="Company">
+            INSERT INTO SHARE_COMPANY (
+                name,
+                email_suffix,
+                logo,
+                address,
+                longitude,
+                latitude,
+                city_id,
+                area_id
+              )
+            VALUES
+              (
+                #{name},
+                #{emailSuffix},
+                #{logo},
+                #{address},
+                #{longitude},
+                #{latitude},
+                #{cityId},
+                #{areaId}
+              )
+
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+
+    </insert>
+
+    <select id="queryByEmailSuffix"   parameterType="String" resultType="Company">
+		select id,name,email_suffix as emailSuffix,logo,address,office_building as officeBuilding,city_id as cityId,area_id as areaId
+		from  SHARE_COMPANY
+		where  email_suffix=#{emailSuffix}
+	</select>
+
+
+</mapper>
